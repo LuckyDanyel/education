@@ -32,112 +32,119 @@ function second() {
 /*!*******************************************************!*\
   !*** ./blocks/form-elements/pagination/pagination.js ***!
   \*******************************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-var getPaginationItems = document.querySelectorAll('.pagination__item');
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "../node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "../node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _room_room__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../room/room */ "./blocks/room/room.js");
+/* harmony import */ var _pages_second_page_second_pageLogic__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../pages/second-page/second-pageLogic */ "./pages/second-page/second-pageLogic.js");
+/* provided dependency */ var console = __webpack_require__(/*! ../node_modules/console-browserify/index.js */ "../node_modules/console-browserify/index.js");
+
+
+var getPaginationItems = document.querySelector('.pagination__items');
 var getPaginationArrow = document.querySelector('.pagination__arrow');
-var NumberOfPages = 15; // Количество страниц. Можно менять это значение.
+var getContainerRooms = document.querySelector('.main-second__all-rooms');
+var getNumberPage = +getPaginationItems.dataset.numberpage;
+var stringItems = " ";
+var activeElement = 0;
+var dataRooms;
+var URL = 'http://localhost:5000/api/rooms';
 
-var NumberMassivePages = [];
-var NumberMassiveOnSite = [];
-var countNextNumber = 0;
-var activeNumber = 1;
-var ObjectActiveNow = {
-  // Объект, который сохраняет номер страцницы, которая в данный момент активна
-  number: 1,
-  // Индекс массива, который показывает активность номера страницы
-  value: 1 // Номер страницы
 
+
+var addHtml = function addHtml(nameImage, number, price, rating, reviews, isLux) {
+  return "<div class=\"room\">\n                  <div class=\"room__box\"></div>\n                  <div class=\"room__up\">\n                    <div class=\"room__image\">\n                      <div class=\"room__slider-item\" style=\"order: 1;\"> <img src=\"images/".concat(nameImage, ".jpg\" alt=\"room\"></div>\n                      <div class=\"room__slider-item\" style=\"order: 2;\">2</div>\n                      <div class=\"room__slider-item\" style=\"order: 3;\">3 </div>\n                      <div class=\"room__slider-item\" style=\"order: 4;\">4</div>\n                    </div>\n                    <div class=\"room__arrow\"><span class=\"room__arrow-item\"></span><span class=\"room__arrow-item\"></span></div>\n                    <div class=\"room__circle\"><span class=\"room__circle-item room__circle-active\"></span><span class=\"room__circle-item\"></span><span class=\"room__circle-item\"></span><span class=\"room__circle-item\"></span></div>\n                  </div>\n                  <div class=\"room__main\">\n                    <div class=\"room__info\">\n                      <div class=\"room__info-left\"><span class=\"room__info-item-left\">\u2116</span><span class=\"room__info-item-left\">").concat(number, "</span><span class=\"room__info-item-left\">").concat(isLux, "</span></div>\n                      <div class=\"room__info-right\"><span class=\"room__info-item-right\">").concat(price, "</span><span class=\"room__info-item-right\">\u0432 \u0441\u0443\u0442\u043A\u0438</span></div>\n                    </div>\n                    <div class=\"room__footer\">\n                      <div class=\"room__rate\">\n                        <div class=\"rate\">\n                          <div class=\"rate__body\">\n                            <div class=\"rate__active\" style=\"width: ").concat(rating * 20, "%\"></div>\n                            <div class=\"rate__inputs\">\n                              <input class=\"rate__input\" type=\"radio\" name=\"star-undefined\" value=\"1\">\n                              <input class=\"rate__input\" type=\"radio\" name=\"star-undefined\" value=\"2\">\n                              <input class=\"rate__input\" type=\"radio\" name=\"star-undefined\" value=\"3\">\n                              <input class=\"rate__input\" type=\"radio\" name=\"star-undefined\" value=\"4\">\n                              <input class=\"rate__input\" type=\"radio\" name=\"star-undefined\" value=\"5\">\n                            </div>\n                          </div>\n                        </div>\n                      </div>\n                      <div class=\"room__review\"><span class=\"room__footer-item\">").concat(reviews, "</span><span class=\"room__footer-item\">\u043E\u0442\u0437\u044B\u0432\u043E\u0432</span></div>\n                    </div>\n                  </div>\n                  </div>");
 };
-var endRowPages = false;
-var endCountPages = true;
 
-function renderMassivePages() {
-  for (i = 1; i < NumberOfPages + 1; i++) {
-    NumberMassivePages[i - 1] = i;
+var addItem = function addItem(number, className) {
+  var secondClassName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : " ";
+  return "<span class = \"".concat(className, " ").concat(secondClassName, "\" href = \"second-page/").concat(number, "\" data-number = \"").concat(number, "\">") + number + "</span>";
+};
+
+function addItems(start, end, elementNow) {
+  stringItems = " ";
+  stringItems += addItem(start, "pagination__item", "pagination__active");
+
+  for (var _i = start + 1; _i <= end; _i++) {
+    stringItems += addItem(_i, "pagination__item");
   }
+
+  getPaginationItems.innerHTML = stringItems;
 }
 
-function renderMassiveSite() {
-  NumberMassiveOnSite[0] = 1;
-  NumberMassiveOnSite[1] = 2;
-  NumberMassiveOnSite[2] = 3;
-  NumberMassiveOnSite[3] = "...";
-  NumberMassiveOnSite[4] = NumberOfPages;
-  viewPagItems(NumberMassiveOnSite, 0);
-}
+function changeLogic() {}
 
 getPaginationArrow.addEventListener('click', function () {
-  renderPagItems(NumberMassivePages, NumberMassiveOnSite, countNextNumber);
-  countNextNumber++;
+  activeElement++;
+
+  if (getNumberPage - (activeElement - 1) <= 5) {
+    changeLogic();
+  } else {
+    var getAllItems = document.querySelectorAll('.pagination__item');
+    getAllItems[activeElement - 1].style.display = "none";
+    getAllItems[activeElement].classList.add("pagination__active");
+    getRooms(URL, getAllItems[activeElement].dataset.number);
+  }
 });
 
-function renderPagItems(massive, massiveSite, nextNumber) {
-  if (massive[nextNumber] != NumberOfPages) {
-    for (i = 0; i < 5; i++) {
-      if (endRowPages == false) {
-        massiveSite[i] = massive[nextNumber];
-        ObjectActiveNow.value = massiveSite[ObjectActiveNow.number];
+function getRooms(_x, _x2) {
+  return _getRooms.apply(this, arguments);
+}
 
-        if (i == 3) {
-          massiveSite[i] = "...";
-        } else if (i == 4) {
-          massiveSite[i] = massive.length;
+function _getRooms() {
+  _getRooms = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee(url, number) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return fetch(url);
+
+          case 2:
+            dataRooms = _context.sent;
+            addRoms(dataRooms, number);
+
+          case 4:
+          case "end":
+            return _context.stop();
         }
-
-        if (massiveSite[i] == massive.length - 2) {
-          endRowPages = true;
-          ObjectActiveNow.value = massiveSite[ObjectActiveNow.number];
-          i = 5;
-        }
-
-        nextNumber++;
-      } else {
-        activeNumber++;
-        ObjectActiveNow.number++;
-
-        if (activeNumber == 2) {
-          massiveSite[activeNumber] = massive.length - 2;
-          ObjectActiveNow.value = massiveSite[ObjectActiveNow.number];
-        }
-
-        if (activeNumber == 3) {
-          massiveSite[activeNumber] = massive.length - 1;
-          ObjectActiveNow.value = massiveSite[ObjectActiveNow.number];
-        }
-
-        if (activeNumber == 4) {
-          massiveSite[activeNumber] = massive.length;
-          ObjectActiveNow.value = massiveSite[ObjectActiveNow.number];
-        }
-
-        i = 5;
       }
+    }, _callee);
+  }));
+  return _getRooms.apply(this, arguments);
+}
+
+function addRoms(result, numberPage) {
+  console.log(dataRooms);
+  var data = result.json().then(function (massiveRooms) {
+    var strokeRooms = "<div class = \"main-second__heading\"> <h1> \u041D\u043E\u043C\u0435\u0440\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043C\u044B \u0434\u043B\u044F \u0432\u0430\u0441 \u043F\u043E\u0434\u043E\u0431\u0440\u0430\u043B\u0438 </h1> </div>";
+    var endRooms = numberPage * 12;
+    var startRooms = numberPage === 1 ? 0 : (numberPage - 1) * 12;
+    console.log(numberPage);
+
+    for (i = startRooms; i < endRooms; i++) {
+      var _massiveRooms$i = massiveRooms[i],
+          imageName = _massiveRooms$i.imageName,
+          number = _massiveRooms$i.number,
+          price = _massiveRooms$i.price,
+          rating = _massiveRooms$i.rating,
+          reviews = _massiveRooms$i.reviews,
+          isLux = _massiveRooms$i.isLux;
+      strokeRooms += addHtml(imageName, number, price, rating, reviews, isLux);
     }
 
-    viewPagItems(massiveSite, activeNumber);
-  } else {
-    ObjectActiveNow.value = 1;
-    ObjectActiveNow.number = 1;
-    renderMassiveSite();
-    countNextNumber = -1;
-    activeNumber = 1;
-    endRowPages = false;
-  }
+    getContainerRooms.innerHTML = strokeRooms;
+  }).then(function () {
+    _room_room__WEBPACK_IMPORTED_MODULE_2__["default"].initRooms();
+    _pages_second_page_second_pageLogic__WEBPACK_IMPORTED_MODULE_3__["default"].initSecondPage();
+  });
 }
 
-function viewPagItems(massiveSite, activeNumber) {
-  for (i = 0; i < 5; i++) {
-    getPaginationItems[i].innerHTML = massiveSite[i];
-    getPaginationItems[i].setAttribute('class', 'pagination__item');
-  }
-
-  getPaginationItems[activeNumber].setAttribute('class', 'pagination__item pagination__active');
-  window.location = window.location + "/".concat(ObjectActiveNow.value);
-}
-
-renderMassivePages();
-renderMassiveSite();
+getRooms(URL, 1);
+addItems(1, getNumberPage);
 
 /***/ }),
 
@@ -182,174 +189,179 @@ slider.noUiSlider.on('update', function (values, handle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getSlider": () => (/* binding */ getSlider)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "../node_modules/jquery/dist/jquery.js");
-var widthRate = document.querySelectorAll('.rate__active');
+function initRooms() {
+  var widthRate = document.querySelectorAll('.rate__active');
 
-function setRate(value, index) {
-  var countValue;
-  countValue = value * 20;
-  widthRate[index].style.width = String(countValue + "%");
-}
-
-function getSlider() {
-  var numberRooms = 0;
-  var getRoomAll = document.querySelectorAll('.room');
-  var getRoom = document.querySelectorAll('.room')[numberRooms];
-  var getRoomSliderItem = getRoom.querySelectorAll('.room__slider-item');
-  var getRoomSliderArrow = getRoom.querySelectorAll('.room__arrow-item');
-  var getRoomSliderCircle = getRoom.querySelectorAll('.room__circle-item');
-  var numberImagePlus = 1;
-
-  function imageChangeRight() {
-    if (numberImagePlus == 0) {
-      $(getRoomSliderItem[3]).css('order', 4);
-      $(getRoomSliderItem[2]).css('order', 3);
-      $(getRoomSliderItem[1]).css('order', 2);
-      $(getRoomSliderItem[0]).css('order', 1);
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item room__circle-active");
-      getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
-    }
-
-    if (numberImagePlus == 1) {
-      $(getRoomSliderItem[3]).css('order', 4);
-      $(getRoomSliderItem[2]).css('order', 3);
-      $(getRoomSliderItem[1]).css('order', 1);
-      $(getRoomSliderItem[0]).css('order', 2);
-      getRoomSliderCircle[1].setAttribute("class", "room__circle-item room__circle-active");
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
-    }
-
-    if (numberImagePlus == 2) {
-      $(getRoomSliderItem[3]).css('order', 4);
-      $(getRoomSliderItem[2]).css('order', 1);
-      $(getRoomSliderItem[1]).css('order', 2);
-      $(getRoomSliderItem[0]).css('order', 3);
-      getRoomSliderCircle[2].setAttribute("class", "room__circle-item room__circle-active");
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
-    }
-
-    if (numberImagePlus == 3) {
-      $(getRoomSliderItem[3]).css('order', 1);
-      $(getRoomSliderItem[2]).css('order', 2);
-      $(getRoomSliderItem[1]).css('order', 3);
-      $(getRoomSliderItem[0]).css('order', 4);
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item room__circle-active");
-      getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
-      numberImagePlus = 0;
-      return 0;
-    }
-
-    numberImagePlus++;
+  function setRate(value, index) {//     let countValue;
+    //     countValue = value * 20;
+    //     widthRate[index].style.width = String(countValue + "%");
   }
 
-  function circleChagneImage(item) {
-    if (item == 0) {
-      $(getRoomSliderItem[3]).css('order', 4);
-      $(getRoomSliderItem[2]).css('order', 3);
-      $(getRoomSliderItem[1]).css('order', 2);
-      $(getRoomSliderItem[0]).css('order', 1);
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item room__circle-active");
-      getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+  function getSlider() {
+    var numberRooms = 0;
+    var getRoomAll = document.querySelectorAll('.room');
+    var getRoom = document.querySelectorAll('.room')[numberRooms];
+    var getRoomSliderItem = getRoom.querySelectorAll('.room__slider-item');
+    var getRoomSliderArrow = getRoom.querySelectorAll('.room__arrow-item');
+    var getRoomSliderCircle = getRoom.querySelectorAll('.room__circle-item');
+    var numberImagePlus = 1;
+
+    function imageChangeRight() {
+      if (numberImagePlus == 0) {
+        $(getRoomSliderItem[3]).css('order', 4);
+        $(getRoomSliderItem[2]).css('order', 3);
+        $(getRoomSliderItem[1]).css('order', 2);
+        $(getRoomSliderItem[0]).css('order', 1);
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+      }
+
+      if (numberImagePlus == 1) {
+        $(getRoomSliderItem[3]).css('order', 4);
+        $(getRoomSliderItem[2]).css('order', 3);
+        $(getRoomSliderItem[1]).css('order', 1);
+        $(getRoomSliderItem[0]).css('order', 2);
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+      }
+
+      if (numberImagePlus == 2) {
+        $(getRoomSliderItem[3]).css('order', 4);
+        $(getRoomSliderItem[2]).css('order', 1);
+        $(getRoomSliderItem[1]).css('order', 2);
+        $(getRoomSliderItem[0]).css('order', 3);
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+      }
+
+      if (numberImagePlus == 3) {
+        $(getRoomSliderItem[3]).css('order', 1);
+        $(getRoomSliderItem[2]).css('order', 2);
+        $(getRoomSliderItem[1]).css('order', 3);
+        $(getRoomSliderItem[0]).css('order', 4);
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
+        numberImagePlus = 0;
+        return 0;
+      }
+
+      numberImagePlus++;
+    }
+
+    function circleChagneImage(item) {
+      if (item == 0) {
+        $(getRoomSliderItem[3]).css('order', 4);
+        $(getRoomSliderItem[2]).css('order', 3);
+        $(getRoomSliderItem[1]).css('order', 2);
+        $(getRoomSliderItem[0]).css('order', 1);
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+        numberImagePlus = 1;
+      }
+
+      if (item == 1) {
+        $(getRoomSliderItem[3]).css('order', 4);
+        $(getRoomSliderItem[2]).css('order', 3);
+        $(getRoomSliderItem[1]).css('order', 1);
+        $(getRoomSliderItem[0]).css('order', 2);
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+        numberImagePlus = 2;
+      }
+
+      if (item == 2) {
+        $(getRoomSliderItem[3]).css('order', 4);
+        $(getRoomSliderItem[2]).css('order', 1);
+        $(getRoomSliderItem[1]).css('order', 2);
+        $(getRoomSliderItem[0]).css('order', 3);
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+        numberImagePlus = 3;
+      }
+
+      if (item == 3) {
+        $(getRoomSliderItem[3]).css('order', 1);
+        $(getRoomSliderItem[2]).css('order', 2);
+        $(getRoomSliderItem[1]).css('order', 3);
+        $(getRoomSliderItem[0]).css('order', 4);
+        getRoomSliderCircle[3].setAttribute("class", "room__circle-item room__circle-active");
+        getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
+        getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
+        numberImagePlus = 0;
+        return 0;
+      }
+    }
+
+    for (var i = 0; i < getRoomSliderCircle.length; i++) {
+      var circleItem = getRoomSliderCircle[i];
+      $(circleItem).click(circleChagneImage.bind(this, i));
+    }
+
+    $(getRoomSliderArrow[1]).click(imageChangeRight.bind(this)); // правая стрелка
+
+    function GetUpdate(item) {
+      $(getRoomSliderArrow[1]).unbind('click'); // Удаляем старый обработчик событий
+
+      for (var _i = 0; _i < getRoomSliderCircle.length; _i++) {
+        var _circleItem = getRoomSliderCircle[_i];
+        $(_circleItem).unbind('click');
+      }
+
       numberImagePlus = 1;
-    }
-
-    if (item == 1) {
       $(getRoomSliderItem[3]).css('order', 4);
       $(getRoomSliderItem[2]).css('order', 3);
-      $(getRoomSliderItem[1]).css('order', 1);
-      $(getRoomSliderItem[0]).css('order', 2);
-      getRoomSliderCircle[1].setAttribute("class", "room__circle-item room__circle-active");
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
-      numberImagePlus = 2;
-    }
-
-    if (item == 2) {
-      $(getRoomSliderItem[3]).css('order', 4);
-      $(getRoomSliderItem[2]).css('order', 1);
       $(getRoomSliderItem[1]).css('order', 2);
-      $(getRoomSliderItem[0]).css('order', 3);
-      getRoomSliderCircle[2].setAttribute("class", "room__circle-item room__circle-active");
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
+      $(getRoomSliderItem[0]).css('order', 1);
+      getRoomSliderCircle[0].setAttribute("class", "room__circle-item room__circle-active");
       getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
-      numberImagePlus = 3;
-    }
-
-    if (item == 3) {
-      $(getRoomSliderItem[3]).css('order', 1);
-      $(getRoomSliderItem[2]).css('order', 2);
-      $(getRoomSliderItem[1]).css('order', 3);
-      $(getRoomSliderItem[0]).css('order', 4);
-      getRoomSliderCircle[3].setAttribute("class", "room__circle-item room__circle-active");
       getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
-      getRoomSliderCircle[0].setAttribute("class", "room__circle-item");
-      numberImagePlus = 0;
-      return 0;
+      getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
+      numberRooms = item; // обновляем
+
+      getRoom = document.querySelectorAll('.room')[numberRooms];
+      getRoomSliderItem = getRoom.querySelectorAll('.room__slider-item');
+      getRoomSliderArrow = getRoom.querySelectorAll('.room__arrow-item');
+      getRoomSliderCircle = getRoom.querySelectorAll('.room__circle-item');
+      $(getRoomSliderArrow[1]).click(imageChangeRight.bind(this)); // Добавляем новый обрабочтик событий
+
+      for (var _i2 = 0; _i2 < getRoomSliderCircle.length; _i2++) {
+        var _circleItem2 = getRoomSliderCircle[_i2];
+        $(_circleItem2).click(circleChagneImage.bind(this, _i2));
+      }
+    }
+
+    for (var _i3 = 0; _i3 < getRoomAll.length; _i3++) {
+      var randomRate = Math.floor(Math.random() * 6);
+      var getRooms = getRoomAll[_i3];
+      setRate(randomRate, _i3);
+      $(getRooms).mouseenter(GetUpdate.bind(this, _i3));
     }
   }
 
-  for (var i = 0; i < getRoomSliderCircle.length; i++) {
-    var circleItem = getRoomSliderCircle[i];
-    $(circleItem).click(circleChagneImage.bind(this, i));
-  }
-
-  $(getRoomSliderArrow[1]).click(imageChangeRight.bind(this)); // правая стрелка
-
-  function GetUpdate(item) {
-    $(getRoomSliderArrow[1]).unbind('click'); // Удаляем старый обработчик событий
-
-    for (var _i = 0; _i < getRoomSliderCircle.length; _i++) {
-      var _circleItem = getRoomSliderCircle[_i];
-      $(_circleItem).unbind('click');
-    }
-
-    numberImagePlus = 1;
-    $(getRoomSliderItem[3]).css('order', 4);
-    $(getRoomSliderItem[2]).css('order', 3);
-    $(getRoomSliderItem[1]).css('order', 2);
-    $(getRoomSliderItem[0]).css('order', 1);
-    getRoomSliderCircle[0].setAttribute("class", "room__circle-item room__circle-active");
-    getRoomSliderCircle[1].setAttribute("class", "room__circle-item");
-    getRoomSliderCircle[2].setAttribute("class", "room__circle-item");
-    getRoomSliderCircle[3].setAttribute("class", "room__circle-item");
-    numberRooms = item; // обновляем
-
-    getRoom = document.querySelectorAll('.room')[numberRooms];
-    getRoomSliderItem = getRoom.querySelectorAll('.room__slider-item');
-    getRoomSliderArrow = getRoom.querySelectorAll('.room__arrow-item');
-    getRoomSliderCircle = getRoom.querySelectorAll('.room__circle-item');
-    $(getRoomSliderArrow[1]).click(imageChangeRight.bind(this)); // Добавляем новый обрабочтик событий
-
-    for (var _i2 = 0; _i2 < getRoomSliderCircle.length; _i2++) {
-      var _circleItem2 = getRoomSliderCircle[_i2];
-      $(_circleItem2).click(circleChagneImage.bind(this, _i2));
-    }
-  }
-
-  for (var _i3 = 0; _i3 < getRoomAll.length; _i3++) {
-    var randomRate = Math.floor(Math.random() * 6);
-    var getRooms = getRoomAll[_i3];
-    setRate(randomRate, _i3);
-    $(getRooms).mouseenter(GetUpdate.bind(this, _i3));
-  }
+  getSlider();
 }
 
-
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  initRooms: initRooms
+});
 
 /***/ }),
 
@@ -379,7 +391,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _blocks_form_elements_check_box_list_check_box_list_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../blocks/form-elements/check-box/__list/check-box__list.js */ "./blocks/form-elements/check-box/__list/check-box__list.js");
 /* harmony import */ var _blocks_form_elements_check_box_list_check_box_list_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_blocks_form_elements_check_box_list_check_box_list_js__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _blocks_form_elements_pagination_pagination_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../blocks/form-elements/pagination/pagination.js */ "./blocks/form-elements/pagination/pagination.js");
-/* harmony import */ var _blocks_form_elements_pagination_pagination_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_blocks_form_elements_pagination_pagination_js__WEBPACK_IMPORTED_MODULE_9__);
 /* harmony import */ var _second_pageLogic_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./second-pageLogic.js */ "./pages/second-page/second-pageLogic.js");
 /* provided dependency */ var console = __webpack_require__(/*! ../node_modules/console-browserify/index.js */ "../node_modules/console-browserify/index.js");
 
@@ -434,121 +445,127 @@ function _getRooms() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _blocks_room_room__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../blocks/room/room */ "./blocks/room/room.js");
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 /* provided dependency */ var $ = __webpack_require__(/*! jquery */ "../node_modules/jquery/dist/jquery.js");
 /* provided dependency */ var console = __webpack_require__(/*! ../node_modules/console-browserify/index.js */ "../node_modules/console-browserify/index.js");
-var getAllRoom = document.querySelectorAll('.room__box');
-var getCalendarTextFilter = document.querySelector('#calendar-filter-text');
-var getGuestText = document.querySelector('.drop-downs__guest-text');
-var getBtnFilter = document.querySelector('.aside__filter-btn');
-var getBtnEnd = document.querySelector('.aside__filter-end');
-var firstClick = true;
-var firstClickEnd = false;
-var masiveMonth = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
-var dateFirst = localStorage.getItem("DataArrival");
-var dateDaysFirst = Number(dateFirst.split(".")[0]);
-var dateMonthsFirst = Number(dateFirst.split(".")[1]);
-var dateSecond = localStorage.getItem("DataExit");
-var dateDaysSecond = Number(dateSecond.split(".")[0]);
-var dateMonthsSecond = Number(dateSecond.split(".")[1]);
-getCalendarTextFilter.innerHTML = dateDaysFirst + " " + masiveMonth[dateMonthsFirst - 1] + " - " + dateDaysSecond + " " + masiveMonth[dateMonthsSecond - 1];
-getGuestText.innerHTML = localStorage.getItem("DataGuest") == null ? "Сколько гостей" : localStorage.getItem("DataGuest");
+function initSecondPage() {
+  var getAllRoom = document.querySelectorAll('.room__box');
+  var getCalendarTextFilter = document.querySelector('#calendar-filter-text');
+  var getGuestText = document.querySelector('.drop-downs__guest-text');
+  var getBtnFilter = document.querySelector('.aside__filter-btn');
+  var getBtnEnd = document.querySelector('.aside__filter-end');
+  var firstClick = true;
+  var firstClickEnd = false;
+  var masiveMonth = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
+  var dateFirst = localStorage.getItem("DataArrival");
+  var dateDaysFirst = Number(dateFirst.split(".")[0]);
+  var dateMonthsFirst = Number(dateFirst.split(".")[1]);
+  var dateSecond = localStorage.getItem("DataExit");
+  var dateDaysSecond = Number(dateSecond.split(".")[0]);
+  var dateMonthsSecond = Number(dateSecond.split(".")[1]);
+  getCalendarTextFilter.innerHTML = dateDaysFirst + " " + masiveMonth[dateMonthsFirst - 1] + " - " + dateDaysSecond + " " + masiveMonth[dateMonthsSecond - 1];
+  getGuestText.innerHTML = localStorage.getItem("DataGuest") == null ? "Сколько гостей" : localStorage.getItem("DataGuest");
 
-for (var i = 0; i < getAllRoom.length; i++) {
-  var addEventRoom = getAllRoom[i];
-  $(addEventRoom).click(findRoom.bind(undefined, i));
+  for (var i = 0; i < getAllRoom.length; i++) {
+    var addEventRoom = getAllRoom[i];
+    $(addEventRoom).click(findRoom.bind(this, i));
+  }
+
+  function findRoom(numberRoom) {
+    var isLux;
+    var getAllRooms = document.querySelectorAll('.room')[numberRoom];
+    var getLux = getAllRooms.querySelectorAll('.room__info-item-left')[2];
+    var getNumberRoom = getAllRooms.querySelectorAll('.room__info-item-left')[1];
+    var getPriceRoom = getAllRooms.querySelectorAll('.room__info-item-right')[0];
+
+    if (getLux == undefined) {
+      isLux = 0;
+      localStorage.setItem("isLux", isLux);
+    } else {
+      isLux = 1;
+      localStorage.setItem("isLux", isLux);
+    }
+
+    localStorage.setItem("DataPriceRoom", getPriceRoom.innerHTML);
+    localStorage.setItem("DataNumberRoom", getNumberRoom.innerHTML);
+    console.log(localStorage.getItem("isLux"));
+    window.location = 'specific';
+  } // ---------------------------- For css ----------------------------------------------------
+
+
+  $(document).scroll(function () {
+    if (window.innerWidth > 890 && window.innerWidth < 1200) {
+      var marginTop = 0;
+      var scrolled = $(this).scrollTop();
+      marginTop = scrolled - 50;
+
+      if (scrolled < 600) {
+        $('.aside').css("margin-top", 0 + "px");
+      }
+
+      if (scrolled > 601 && scrolled < document.body.scrollHeight - scrolled - 1200) {
+        $('.aside').css("margin-top", marginTop + "px");
+      }
+    }
+
+    if (window.innerWidth > 650 && window.innerWidth < 890) {
+      var _marginTop = 0;
+
+      var _scrolled = $(this).scrollTop();
+
+      _marginTop = _scrolled - 50;
+
+      if (_scrolled < 600) {
+        $('.aside').css("margin-top", 0 + "px");
+      }
+
+      if (_scrolled > 601 && _scrolled < document.body.scrollHeight - _scrolled + 300) {
+        $('.aside').css("margin-top", _marginTop + "px");
+      }
+    }
+  });
+  $(getBtnFilter).click(function () {
+    console.log("Первая фунция");
+
+    if (firstClick == true) {
+      $('.aside').show();
+      $('.aside__filter-end').show();
+      firstClick = false;
+      firstClickEnd = true;
+    } else {
+      firstClick = true;
+    }
+  });
+  getBtnEnd.addEventListener('click', function () {
+    console.log("Вторая фунция");
+
+    if (firstClickEnd == true) {
+      $('.aside').hide();
+      $('.aside__filter-end').hide();
+      firstClickEnd = false;
+    }
+  });
+  var mediaMin = window.matchMedia('(min-width: 651px)');
+
+  function displayAsideMin(e) {
+    if (e.matches) {
+      $('.aside').show();
+    } else {
+      $('.aside__filter-end').hide();
+      $('.aside').hide();
+      firstClick = true;
+    }
+  }
+
+  mediaMin.addListener(displayAsideMin);
+  displayAsideMin(mediaMin);
 }
 
-function findRoom(numberRoom) {
-  var isLux;
-  var getAllRooms = document.querySelectorAll('.room')[numberRoom];
-  var getLux = getAllRooms.querySelectorAll('.room__info-item-left')[2];
-  var getNumberRoom = getAllRooms.querySelectorAll('.room__info-item-left')[1];
-  var getPriceRoom = getAllRooms.querySelectorAll('.room__info-item-right')[0];
-
-  if (getLux == undefined) {
-    isLux = 0;
-    localStorage.setItem("isLux", isLux);
-  } else {
-    isLux = 1;
-    localStorage.setItem("isLux", isLux);
-  }
-
-  localStorage.setItem("DataPriceRoom", getPriceRoom.innerHTML);
-  localStorage.setItem("DataNumberRoom", getNumberRoom.innerHTML);
-  console.log(localStorage.getItem("isLux"));
-  window.location = 'specific.html?';
-} // ---------------------------- For css ----------------------------------------------------
-
-
-$(document).scroll(function () {
-  if (window.innerWidth > 890 && window.innerWidth < 1200) {
-    var marginTop = 0;
-    var scrolled = $(this).scrollTop();
-    marginTop = scrolled - 50;
-
-    if (scrolled < 600) {
-      $('.aside').css("margin-top", 0 + "px");
-    }
-
-    if (scrolled > 601 && scrolled < document.body.scrollHeight - scrolled - 1200) {
-      $('.aside').css("margin-top", marginTop + "px");
-    }
-  }
-
-  if (window.innerWidth > 650 && window.innerWidth < 890) {
-    var _marginTop = 0;
-
-    var _scrolled = $(this).scrollTop();
-
-    _marginTop = _scrolled - 50;
-
-    if (_scrolled < 600) {
-      $('.aside').css("margin-top", 0 + "px");
-    }
-
-    if (_scrolled > 601 && _scrolled < document.body.scrollHeight - _scrolled + 300) {
-      $('.aside').css("margin-top", _marginTop + "px");
-    }
-  }
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  initSecondPage: initSecondPage
 });
-$(getBtnFilter).click(function () {
-  console.log("Первая фунция");
-
-  if (firstClick == true) {
-    $('.aside').show();
-    $('.aside__filter-end').show();
-    firstClick = false;
-    firstClickEnd = true;
-  } else {
-    firstClick = true;
-  }
-});
-getBtnEnd.addEventListener('click', function () {
-  console.log("Вторая фунция");
-
-  if (firstClickEnd == true) {
-    $('.aside').hide();
-    $('.aside__filter-end').hide();
-    firstClickEnd = false;
-  }
-});
-var mediaMin = window.matchMedia('(min-width: 651px)');
-
-function displayAsideMin(e) {
-  if (e.matches) {
-    $('.aside').show();
-  } else {
-    $('.aside__filter-end').hide();
-    $('.aside').hide();
-    firstClick = true;
-  }
-}
-
-mediaMin.addListener(displayAsideMin);
-displayAsideMin(mediaMin);
-
-(0,_blocks_room_room__WEBPACK_IMPORTED_MODULE_0__.getSlider)();
 
 /***/ }),
 
@@ -616,7 +633,7 @@ module.exports = template;
 var pug = __webpack_require__(/*! !../../../../node_modules/pug-runtime/index.js */ "../node_modules/pug-runtime/index.js");
 
 function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_indent = [];
-pug_html = pug_html + "\n\u003Cdiv class=\"pagination\"\u003E\n  \u003Ch3 class=\"pagination__title\"\u003E\u003C\u002Fh3\u003E\n  \u003Cdiv class=\"pagination__main\"\u003E\n    \u003Cdiv class=\"pagination__items\"\u003E\u003Cspan class=\"pagination__item pagination__active\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"pagination__arrow\"\u003E\u003Cspan class=\"pagination__arrow-item\"\u003E\u003Csvg width=\"17\" height=\"18\" viewBox=\"0 0 17 18\" fill=\"none\" xmlns=\"http:\u002F\u002Fwww.w3.org\u002F2000\u002Fsvg\"\u003E\n\u003Cpath d=\"M8.36252 0.984375L16.3781 9L8.36252 17.0156L6.95627 15.6094L12.5344 9.98438H0.346894V8.01562H12.5344L6.95627 2.39062L8.36252 0.984375Z\" fill=\"#BC9CFF\"\u002F\u003E\n\u003C\u002Fsvg\u003E\n\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n  \u003C\u002Fdiv\u003E\n  \u003Cdiv class=\"pagination__footer\"\u003E\n    \u003Cp class=\"pagination__text\"\u003E1 – 12 из 100+ вариантов аренды\u003C\u002Fp\u003E\n  \u003C\u002Fdiv\u003E\n\u003C\u002Fdiv\u003E";;return pug_html;};
+pug_html = pug_html + "\n\u003Cdiv class=\"pagination\"\u003E\n  \u003Ch3 class=\"pagination__title\"\u003E\u003C\u002Fh3\u003E\n  \u003Cdiv class=\"pagination__main\"\u003E\n    \u003Cdiv class=\"pagination__items\" data-numberPage=\"15\"\u003E\u003Cspan class=\"pagination__item pagination__active\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"pagination__item\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"pagination__arrow\"\u003E\u003Cspan class=\"pagination__arrow-item\"\u003E\u003Csvg width=\"17\" height=\"18\" viewBox=\"0 0 17 18\" fill=\"none\" xmlns=\"http:\u002F\u002Fwww.w3.org\u002F2000\u002Fsvg\"\u003E\n\u003Cpath d=\"M8.36252 0.984375L16.3781 9L8.36252 17.0156L6.95627 15.6094L12.5344 9.98438H0.346894V8.01562H12.5344L6.95627 2.39062L8.36252 0.984375Z\" fill=\"#BC9CFF\"\u002F\u003E\n\u003C\u002Fsvg\u003E\n\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n  \u003C\u002Fdiv\u003E\n  \u003Cdiv class=\"pagination__footer\"\u003E\n    \u003Cp class=\"pagination__text\"\u003E1 – 12 из 100+ вариантов аренды\u003C\u002Fp\u003E\n  \u003C\u002Fdiv\u003E\n\u003C\u002Fdiv\u003E";;return pug_html;};
 module.exports = template;
 
 /***/ }),
@@ -687,17 +704,17 @@ pug_html = pug_html + "\u003Cdiv class=\"container\"\u003E\n        ";
 pug_html = pug_html + pug_indent.join("");
 pug_html = pug_html + "\u003Cdiv class=\"header__wrapper\"\u003E\n          ";
 pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"logo\"\u003E\u003Ca href=\"index.html\"\u003E\n              ";
+pug_html = pug_html + "\u003Cdiv class=\"logo\"\u003E\u003Ca href=\"index\"\u003E\n              ";
 pug_html = pug_html + pug_indent.join("");
 pug_html = pug_html + " \u003Csvg width=\"106\" height=\"40\" viewBox=\"0 0 106 40\" fill=\"none\" xmlns=\"http:\u002F\u002Fwww.w3.org\u002F2000\u002Fsvg\"\u003E\n\u003Cpath d=\"M62.335 13.368C62.5567 13.368 62.7375 13.4438 62.8775 13.5955C63.0292 13.7355 63.105 13.9163 63.105 14.138C63.105 14.348 63.0292 14.5288 62.8775 14.6805C62.7375 14.8322 62.5567 14.908 62.335 14.908H58.5725V25.408C58.5725 25.6297 58.4967 25.8163 58.345 25.968C58.205 26.108 58.0242 26.178 57.8025 26.178C57.5925 26.178 57.4117 26.108 57.26 25.968C57.1083 25.8163 57.0325 25.6297 57.0325 25.408V14.908H53.27C53.06 14.908 52.8792 14.8322 52.7275 14.6805C52.5758 14.5288 52.5 14.348 52.5 14.138C52.5 13.9163 52.5758 13.7355 52.7275 13.5955C52.8792 13.4438 53.06 13.368 53.27 13.368H62.335Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M68.9076 13.368C69.7943 13.368 70.6285 13.5372 71.4101 13.8755C72.2034 14.2138 72.8918 14.6747 73.4751 15.258C74.0701 15.8413 74.5368 16.5297 74.8751 17.323C75.2134 18.1047 75.3826 18.9388 75.3826 19.8255C75.3826 20.8638 75.1609 21.8205 74.7176 22.6955C74.2743 23.5705 73.6735 24.3055 72.9151 24.9005C72.9151 24.9005 72.9035 24.9122 72.8801 24.9355C72.3201 25.3555 71.7076 25.688 71.0426 25.933C70.3776 26.1663 69.6659 26.283 68.9076 26.283C68.0209 26.283 67.1868 26.1138 66.4051 25.7755C65.6234 25.4372 64.9351 24.9763 64.3401 24.393C63.7568 23.8097 63.2959 23.1272 62.9576 22.3455C62.6193 21.5638 62.4501 20.7238 62.4501 19.8255C62.4501 18.8455 62.6484 17.9413 63.0451 17.113C63.4418 16.273 63.9843 15.5555 64.6726 14.9605L64.7426 14.8905C64.7543 14.8905 64.7718 14.8788 64.7951 14.8555C65.3551 14.3888 65.9851 14.0272 66.6851 13.7705C67.3851 13.5022 68.1259 13.368 68.9076 13.368ZM68.9076 24.743C69.3509 24.743 69.771 24.6905 70.1676 24.5855C70.576 24.4688 70.9609 24.3113 71.3226 24.113L65.1801 16.6405C64.8068 17.0722 64.5151 17.5622 64.3051 18.1105C64.0951 18.6472 63.9901 19.2188 63.9901 19.8255C63.9901 20.5022 64.1185 21.138 64.3751 21.733C64.6318 22.328 64.9818 22.853 65.4251 23.308C65.8801 23.7513 66.4051 24.1013 67.0001 24.358C67.5951 24.6147 68.2309 24.743 68.9076 24.743ZM72.5301 23.1505C72.9384 22.7072 73.2535 22.2055 73.4751 21.6455C73.7085 21.0738 73.8251 20.4672 73.8251 19.8255C73.8251 19.1488 73.6968 18.513 73.4401 17.918C73.1834 17.323 72.8276 16.8038 72.3726 16.3605C71.9293 15.9055 71.4101 15.5497 70.8151 15.293C70.2201 15.0363 69.5843 14.908 68.9076 14.908C68.4409 14.908 67.9918 14.9722 67.5601 15.1005C67.1284 15.2172 66.7259 15.3922 66.3526 15.6255L72.5301 23.1505Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M82.351 20.6305C82.1177 20.6305 81.9194 20.5372 81.756 20.3505L77.2585 14.5755C77.1302 14.4122 77.0777 14.2313 77.101 14.033C77.1244 13.823 77.2177 13.6538 77.381 13.5255C77.5444 13.3972 77.7252 13.3505 77.9235 13.3855C78.1335 13.4088 78.3027 13.5022 78.431 13.6655L82.351 18.6705L86.1835 13.753C86.3119 13.5897 86.4752 13.4963 86.6735 13.473C86.8835 13.4497 87.0702 13.5022 87.2335 13.6305C87.3969 13.7588 87.4902 13.928 87.5135 14.138C87.5369 14.3363 87.4844 14.5172 87.356 14.6805L82.946 20.3505C82.7944 20.5372 82.596 20.6305 82.351 20.6305ZM87.2685 26.2655C87.2219 26.2655 87.146 26.2597 87.041 26.248C86.9477 26.2363 86.8369 26.2072 86.7085 26.1605C86.5802 26.1022 86.4402 26.0263 86.2885 25.933C86.1485 25.828 86.0085 25.688 85.8685 25.513L82.351 20.9805L78.5185 25.9155C78.3902 26.0788 78.221 26.1722 78.011 26.1955C77.8127 26.2188 77.6319 26.1663 77.4685 26.038C77.3052 25.9097 77.2119 25.7463 77.1885 25.548C77.1652 25.338 77.2177 25.1513 77.346 24.988L81.756 19.318C81.896 19.1313 82.0885 19.038 82.3335 19.038C82.5902 19.038 82.7944 19.1313 82.946 19.318L87.041 24.568C87.0994 24.6497 87.1519 24.7022 87.1985 24.7255C87.2452 24.7488 87.2802 24.7663 87.3035 24.778C87.5019 24.778 87.6652 24.848 87.7935 24.988C87.9335 25.1163 88.0094 25.2797 88.021 25.478C88.0444 25.688 87.986 25.8688 87.846 26.0205C87.706 26.1722 87.531 26.2538 87.321 26.2655H87.2685Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M91.7343 26.2655C91.5126 26.2655 91.326 26.1897 91.1743 26.038C91.0226 25.8863 90.9468 25.6997 90.9468 25.478V14.103C90.9468 13.893 91.0226 13.7122 91.1743 13.5605C91.326 13.4088 91.5126 13.333 91.7343 13.333C91.9443 13.333 92.1251 13.4088 92.2768 13.5605C92.4285 13.7122 92.5043 13.893 92.5043 14.103V25.478C92.5043 25.6997 92.4285 25.8863 92.2768 26.038C92.1251 26.1897 91.9443 26.2655 91.7343 26.2655Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M104.938 26.2305C104.681 26.2305 104.483 26.1313 104.343 25.933L97.0452 16.343V25.478C97.0452 25.688 96.9693 25.8688 96.8177 26.0205C96.6777 26.1605 96.5027 26.2305 96.2927 26.2305C96.0943 26.2305 95.9193 26.1605 95.7677 26.0205C95.616 25.8688 95.5402 25.688 95.5402 25.478V14.1205C95.5402 13.9572 95.5868 13.8113 95.6802 13.683C95.7735 13.5547 95.9018 13.4672 96.0652 13.4205C96.2168 13.3622 96.3685 13.3563 96.5202 13.403C96.6718 13.4497 96.8002 13.5372 96.9052 13.6655L104.185 23.273V14.1205C104.185 13.9222 104.255 13.7472 104.395 13.5955C104.547 13.4438 104.728 13.368 104.938 13.368C105.148 13.368 105.323 13.4438 105.463 13.5955C105.614 13.7472 105.69 13.9222 105.69 14.1205V25.478C105.69 25.6413 105.643 25.7872 105.55 25.9155C105.457 26.0438 105.334 26.1372 105.183 26.1955C105.066 26.2188 104.984 26.2305 104.938 26.2305Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M20.0003 27.0587C19.3533 27.0587 18.8239 26.5292 18.8239 25.8822C18.8239 21.3528 15.118 17.6469 10.5886 17.6469C9.94152 17.6469 9.41211 17.1175 9.41211 16.4704C9.41211 15.8234 9.94152 15.2939 10.5886 15.2939C16.4415 15.2939 21.1768 20.0292 21.1768 25.8822C21.1768 26.5292 20.6474 27.0587 20.0003 27.0587Z\" fill=\"url(#paint0_linear)\"\u002F\u003E\n\u003Cpath d=\"M30.5884 16.4704C30.5884 17.1175 30.0589 17.6469 29.4119 17.6469C26.6178 17.6469 24.1178 19.0587 22.6472 21.2057C22.3236 20.3822 21.9413 19.6175 21.4707 18.9116C23.4119 16.6763 26.2648 15.2939 29.4119 15.2939C30.0589 15.2939 30.5884 15.8234 30.5884 16.4704Z\" fill=\"url(#paint1_linear)\"\u002F\u003E\n\u003Cpath d=\"M20 40C8.97059 40 0 31.0294 0 20C0 8.97059 8.97059 0 20 0C31.0294 0 40 8.97059 40 20C40 31.0294 31.0294 40 20 40ZM20 2.35294C10.2647 2.35294 2.35294 10.2647 2.35294 20C2.35294 29.7353 10.2647 37.6471 20 37.6471C29.7353 37.6471 37.6471 29.7353 37.6471 20C37.6471 10.2647 29.7353 2.35294 20 2.35294Z\" fill=\"url(#paint2_linear)\"\u002F\u003E\n\u003Cdefs\u003E\n\u003ClinearGradient id=\"paint0_linear\" x1=\"15.2945\" y1=\"15.2939\" x2=\"15.2945\" y2=\"27.0587\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#BC9CFF\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#8BA4F9\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003ClinearGradient id=\"paint1_linear\" x1=\"26.0295\" y1=\"15.2939\" x2=\"26.0295\" y2=\"21.2057\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#6FCF97\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#66D2EA\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003ClinearGradient id=\"paint2_linear\" x1=\"20\" y1=\"0\" x2=\"20\" y2=\"40\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#BC9CFF\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#8BA4F9\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003C\u002Fdefs\u003E\n\u003C\u002Fsvg\u003E\n\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E\n          ";
 pug_html = pug_html + pug_indent.join("");
 pug_html = pug_html + "\u003Cdiv class=\"header__right\"\u003E\n            ";
 pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cmenu class=\"header__menu\"\u003E\u003Ca class=\"header__item header__item_active\" href=\"#\"\u003EО нас\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_arrow\" href=\"#\"\u003EУслуги\u003C\u002Fa\u003E\u003Ca class=\"header__item\" href=\"#\"\u003EВакансии \u003C\u002Fa\u003E\u003Ca class=\"header__item\" href=\"#\"\u003EНовости\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_arrow\" href=\"#\"\u003EСоглашения\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_display-none\" href=\"login.html\"\u003EВойти\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_display-none\" href=\"registration.html\"\u003EЗарегистрироваться\u003C\u002Fa\u003E\u003C\u002Fmenu\u003E\n            ";
+pug_html = pug_html + "\u003Cmenu class=\"header__menu\"\u003E\u003Ca class=\"header__item header__item_active\" href=\"#\"\u003EО нас\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_arrow\" href=\"#\"\u003EУслуги\u003C\u002Fa\u003E\u003Ca class=\"header__item\" href=\"#\"\u003EВакансии \u003C\u002Fa\u003E\u003Ca class=\"header__item\" href=\"#\"\u003EНовости\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_arrow\" href=\"#\"\u003EСоглашения\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_display-none\" href=\"login\"\u003EВойти\u003C\u002Fa\u003E\u003Ca class=\"header__item header__item_display-none\" href=\"registration\"\u003EЗарегистрироваться\u003C\u002Fa\u003E\u003C\u002Fmenu\u003E\n            ";
 pug_html = pug_html + pug_indent.join("");
 pug_html = pug_html + "\u003Cdiv class=\"burger__menu\"\u003E\u003Cspan class=\"burger__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"burger__item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"burger__item\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n            ";
 pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"header__menu-btn\"\u003E\u003Ca href=\"login.html\"\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"header__menu-btn\"\u003E\u003Ca href=\"login\"\u003E";
 
 
 
@@ -768,7 +785,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 pug_indent.push("                ");
 pug_mixins["buttonWithBorderSmall"]("Войти");
 pug_indent.pop();
-pug_html = pug_html + "\u003C\u002Fa\u003E\u003Ca href=\"registration.html\"\u003E";
+pug_html = pug_html + "\u003C\u002Fa\u003E\u003Ca href=\"registration\"\u003E";
 pug_indent.push("                ");
 pug_mixins["buttonBig"]("Зарегистрироваться", "no");
 pug_indent.pop();
@@ -1093,211 +1110,175 @@ pug_indent.push("              ");
 pug_mixins["DropBoxRooms"]();
 pug_indent.pop();
 pug_html = pug_html + "\n            \u003C\u002Fdiv\u003E\n            \u003Cdiv class=\"main-second__comfort-extra\"\u003E" + (null == (pug_interp = __webpack_require__(/*! ../../blocks/form-elements/check-box/__list/check-box__list.pug */ "./blocks/form-elements/check-box/__list/check-box__list.pug").call(this, locals)) ? "" : pug_interp) + "\n            \u003C\u002Fdiv\u003E\n          \u003C\u002Faside\u003E\n          \u003Cdiv class=\"aside__filter-btn\"\u003E\u003Cspan\u003EВсе фильтры\u003C\u002Fspan\u003E\n            \u003Cdiv class=\"asside__filter-img\"\u003E\u003C?xml version=\"1.0\" encoding=\"iso-8859-1\"?\u003E\n\u003C!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  --\u003E\n\u003Csvg version=\"1.1\" id=\"Layer_1\" xmlns=\"http:\u002F\u002Fwww.w3.org\u002F2000\u002Fsvg\" xmlns:xlink=\"http:\u002F\u002Fwww.w3.org\u002F1999\u002Fxlink\" x=\"0px\" y=\"0px\"\n\t viewBox=\"0 0 368.167 368.167\" style=\"enable-background:new 0 0 368.167 368.167;\" xml:space=\"preserve\"\u003E\n\u003Cg\u003E\n\t\u003Cg\u003E\n\t\t\u003Cg\u003E\n\t\t\t\u003Cpath d=\"M248.084,96.684h12c4.4,0,8-3.6,8-8c0-4.4-3.6-8-8-8h-12c-4.4,0-8,3.6-8,8C240.084,93.084,243.684,96.684,248.084,96.684\n\t\t\t\tz\"\u002F\u003E\n\t\t\t\u003Cpath d=\"M366.484,25.484c-2.8-5.6-8.4-8.8-14.4-8.8h-336c-6,0-11.6,3.6-14.4,8.8c-2.8,5.6-2,12,1.6,16.8l141.2,177.6v115.6\n\t\t\t\tc0,6,3.2,11.2,8.4,14c2.4,1.2,4.8,2,7.6,2c3.2,0,6.4-0.8,9.2-2.8l44.4-30.8c6.4-4.8,10-12,10-19.6v-78.8l140.8-177.2\n\t\t\t\tC368.484,37.484,369.284,31.084,366.484,25.484z M209.684,211.884c-0.8,1.2-1.6,2.8-1.6,4.8v81.2c0,2.8-1.2,5.2-3.2,6.8\n\t\t\t\tl-44.4,30.8v-118.8c0-2.8-1.2-5.2-3.2-6.4l-90.4-113.6h145.2c4.4,0,8-3.6,8-8c0-4.4-3.6-8-8-8h-156c-0.4,0-1.2,0-1.6,0l-38.4-48\n\t\t\t\th336L209.684,211.884z\"\u002F\u003E\n\t\t\u003C\u002Fg\u003E\n\t\u003C\u002Fg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003Cg\u003E\n\u003C\u002Fg\u003E\n\u003C\u002Fsvg\u003E\n\n            \u003C\u002Fdiv\u003E\n            \u003Cdiv class=\"aside__filter-end\"\u003E\u003C?xml version=\"1.0\" ?\u003E\u003Csvg viewBox=\"0 0 32 32\" xmlns=\"http:\u002F\u002Fwww.w3.org\u002F2000\u002Fsvg\"\u003E\u003Cdefs\u003E\u003Cstyle\u003E.cls-1{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}\u003C\u002Fstyle\u003E\u003C\u002Fdefs\u003E\u003Ctitle\u002F\u003E\u003Cg id=\"cross\"\u003E\u003Cline class=\"cls-1\" x1=\"7\" x2=\"25\" y1=\"7\" y2=\"25\"\u002F\u003E\u003Cline class=\"cls-1\" x1=\"7\" x2=\"25\" y1=\"25\" y2=\"7\"\u002F\u003E\u003C\u002Fg\u003E\u003C\u002Fsvg\u003E\u003C\u002Fdiv\u003E\n          \u003C\u002Fdiv\u003E\n          \u003Csection class=\"main-second__all-rooms\"\u003E\n            \u003Cdiv class=\"main-second__heading\"\u003E\n              \u003Ch1\u003EНомера, которые мы для вас подобрали\u003C\u002Fh1\u003E\n            \u003C\u002Fdiv\u003E";
-pug_mixins["roomLux"] = pug_interp = function(pathToImage, number, price){
-var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\n            ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room\"\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__box\"\u003E\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__up\"\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__image\"\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E \u003Cimg" + (pug.attr("src", pathToImage, true, true)+" alt=\"room\"") + "\u003E\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E2\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E3 \u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E4\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__arrow\"\u003E\u003Cspan class=\"room__arrow-item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__arrow-item\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__circle\"\u003E\u003Cspan class=\"room__circle-item room__circle-active\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__circle-item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__circle-item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__circle-item\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__main\"\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__info\"\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__info-left\"\u003E\u003Cspan class=\"room__info-item-left\"\u003E№\u003C\u002Fspan\u003E\u003Cspan class=\"room__info-item-left\"\u003E" + (pug.escape(null == (pug_interp = number) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003Cspan class=\"room__info-item-left\"\u003EЛюкс\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__info-right\"\u003E\u003Cspan class=\"room__info-item-right\"\u003E" + (pug.escape(null == (pug_interp = price) ? "" : pug_interp)) + "₽\u003C\u002Fspan\u003E\u003Cspan class=\"room__info-item-right\"\u003Eв сутки\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__footer\"\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__rate\"\u003E";
-pug_mixins["Rate"] = pug_interp = function(nameRate){
-var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\n                    ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate\"\u003E\n                      ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate__body\"\u003E\n                        ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate__active\"\u003E\u003C\u002Fdiv\u003E\n                        ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate__inputs\"\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"1\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"2\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"3\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"4\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"5\"") + "\u003E\n                        ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                      ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                    ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E";
-};
-pug_indent.push("                    ");
-pug_mixins["Rate"]();
-pug_indent.pop();
-pug_html = pug_html + "\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__review\"\u003E\u003Cspan class=\"room__footer-item\"\u003E145\u003C\u002Fspan\u003E\u003Cspan class=\"room__footer-item\"\u003Eотзывов\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n            ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E";
-};
-pug_mixins["roomUsual"] = pug_interp = function(pathToImage, number, price){
-var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\n            ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room\"\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__box\"\u003E\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__up\"\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__image\"\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E \u003Cimg" + (pug.attr("src", pathToImage, true, true)+" alt=\"room\"") + "\u003E\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E2\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E3 \u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__slider-item\"\u003E4\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__arrow\"\u003E\u003Cspan class=\"room__arrow-item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__arrow-item\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__circle\"\u003E\u003Cspan class=\"room__circle-item room__circle-active\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__circle-item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__circle-item\"\u003E\u003C\u002Fspan\u003E\u003Cspan class=\"room__circle-item\"\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__main\"\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__info\"\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__info-left\"\u003E\u003Cspan class=\"room__info-item-left\"\u003E№\u003C\u002Fspan\u003E\u003Cspan class=\"room__info-item-left\"\u003E" + (pug.escape(null == (pug_interp = number) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__info-right\"\u003E\u003Cspan class=\"room__info-item-right\"\u003E" + (pug.escape(null == (pug_interp = price) ? "" : pug_interp)) + "₽\u003C\u002Fspan\u003E\u003Cspan class=\"room__info-item-right\"\u003Eв сутки\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__footer\"\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__rate\"\u003E";
-pug_mixins["Rate"] = pug_interp = function(nameRate){
-var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\n                    ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate\"\u003E\n                      ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate__body\"\u003E\n                        ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate__active\"\u003E\u003C\u002Fdiv\u003E\n                        ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"rate__inputs\"\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"1\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"2\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"3\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"4\"") + "\u003E\n                          ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cinput" + (" class=\"rate__input\""+" type=\"radio\""+pug.attr("name", "star-" + nameRate, true, true)+" value=\"5\"") + "\u003E\n                        ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                      ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                    ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E";
-};
-pug_indent.push("                    ");
-pug_mixins["Rate"]();
-pug_indent.pop();
-pug_html = pug_html + "\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n                  ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003Cdiv class=\"room__review\"\u003E\u003Cspan class=\"room__footer-item\"\u003E145\u003C\u002Fspan\u003E\u003Cspan class=\"room__footer-item\"\u003Eотзывов\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\n                ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n              ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\n            ";
-pug_html = pug_html + pug_indent.join("");
-pug_html = pug_html + "\u003C\u002Fdiv\u003E";
-};
-pug_indent.push("            ");
-pug_mixins["roomLux"](__webpack_require__(/*! ../../blocks/room/image/room1.jpg */ "./blocks/room/image/room1.jpg"), 100, 9800);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room2.jpg */ "./blocks/room/image/room2.jpg"), 143, 5500);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room3.jpg */ "./blocks/room/image/room3.jpg"), 323, 6700);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room4.jpg */ "./blocks/room/image/room4.jpg"), 413, 5600);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room5.jpg */ "./blocks/room/image/room5.jpg"), 412, 8500);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room6.jpg */ "./blocks/room/image/room6.jpg"), 563, 5600);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomLux"](__webpack_require__(/*! ../../blocks/room/image/room7.jpg */ "./blocks/room/image/room7.jpg"), 423, 11000);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room8.jpg */ "./blocks/room/image/room8.jpg"), 521, 6000);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room9.jpg */ "./blocks/room/image/room9.jpg"), 731, 8000);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room10.jpg */ "./blocks/room/image/room10.jpg"), 812, 5000);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room11.jpg */ "./blocks/room/image/room11.jpg"), 467, 6500);
-pug_indent.pop();
-pug_indent.push("            ");
-pug_mixins["roomUsual"](__webpack_require__(/*! ../../blocks/room/image/room12.jpg */ "./blocks/room/image/room12.jpg"), 217, 4500);
-pug_indent.pop();
-pug_html = pug_html + "\n          \u003C\u002Fsection\u003E\n          \u003Cdiv class=\"main-second__pagination\"\u003E" + (null == (pug_interp = __webpack_require__(/*! ../../blocks/form-elements/pagination/pagination.pug */ "./blocks/form-elements/pagination/pagination.pug").call(this, locals)) ? "" : pug_interp) + "\n          \u003C\u002Fdiv\u003E\n        \u003C\u002Fdiv\u003E\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fmain\u003E\n    \u003Cfooter class=\"footer\"\u003E\n      \u003Cdiv class=\"container\"\u003E\n        \u003Cdiv class=\"footer__wrapper\"\u003E\n          \u003Cdiv class=\"footer__logo\"\u003E\u003Ca href=\"index.html\"\u003E\u003Csvg width=\"106\" height=\"40\" viewBox=\"0 0 106 40\" fill=\"none\" xmlns=\"http:\u002F\u002Fwww.w3.org\u002F2000\u002Fsvg\"\u003E\n\u003Cpath d=\"M62.335 13.368C62.5567 13.368 62.7375 13.4438 62.8775 13.5955C63.0292 13.7355 63.105 13.9163 63.105 14.138C63.105 14.348 63.0292 14.5288 62.8775 14.6805C62.7375 14.8322 62.5567 14.908 62.335 14.908H58.5725V25.408C58.5725 25.6297 58.4967 25.8163 58.345 25.968C58.205 26.108 58.0242 26.178 57.8025 26.178C57.5925 26.178 57.4117 26.108 57.26 25.968C57.1083 25.8163 57.0325 25.6297 57.0325 25.408V14.908H53.27C53.06 14.908 52.8792 14.8322 52.7275 14.6805C52.5758 14.5288 52.5 14.348 52.5 14.138C52.5 13.9163 52.5758 13.7355 52.7275 13.5955C52.8792 13.4438 53.06 13.368 53.27 13.368H62.335Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M68.9076 13.368C69.7943 13.368 70.6285 13.5372 71.4101 13.8755C72.2034 14.2138 72.8918 14.6747 73.4751 15.258C74.0701 15.8413 74.5368 16.5297 74.8751 17.323C75.2134 18.1047 75.3826 18.9388 75.3826 19.8255C75.3826 20.8638 75.1609 21.8205 74.7176 22.6955C74.2743 23.5705 73.6735 24.3055 72.9151 24.9005C72.9151 24.9005 72.9035 24.9122 72.8801 24.9355C72.3201 25.3555 71.7076 25.688 71.0426 25.933C70.3776 26.1663 69.6659 26.283 68.9076 26.283C68.0209 26.283 67.1868 26.1138 66.4051 25.7755C65.6234 25.4372 64.9351 24.9763 64.3401 24.393C63.7568 23.8097 63.2959 23.1272 62.9576 22.3455C62.6193 21.5638 62.4501 20.7238 62.4501 19.8255C62.4501 18.8455 62.6484 17.9413 63.0451 17.113C63.4418 16.273 63.9843 15.5555 64.6726 14.9605L64.7426 14.8905C64.7543 14.8905 64.7718 14.8788 64.7951 14.8555C65.3551 14.3888 65.9851 14.0272 66.6851 13.7705C67.3851 13.5022 68.1259 13.368 68.9076 13.368ZM68.9076 24.743C69.3509 24.743 69.771 24.6905 70.1676 24.5855C70.576 24.4688 70.9609 24.3113 71.3226 24.113L65.1801 16.6405C64.8068 17.0722 64.5151 17.5622 64.3051 18.1105C64.0951 18.6472 63.9901 19.2188 63.9901 19.8255C63.9901 20.5022 64.1185 21.138 64.3751 21.733C64.6318 22.328 64.9818 22.853 65.4251 23.308C65.8801 23.7513 66.4051 24.1013 67.0001 24.358C67.5951 24.6147 68.2309 24.743 68.9076 24.743ZM72.5301 23.1505C72.9384 22.7072 73.2535 22.2055 73.4751 21.6455C73.7085 21.0738 73.8251 20.4672 73.8251 19.8255C73.8251 19.1488 73.6968 18.513 73.4401 17.918C73.1834 17.323 72.8276 16.8038 72.3726 16.3605C71.9293 15.9055 71.4101 15.5497 70.8151 15.293C70.2201 15.0363 69.5843 14.908 68.9076 14.908C68.4409 14.908 67.9918 14.9722 67.5601 15.1005C67.1284 15.2172 66.7259 15.3922 66.3526 15.6255L72.5301 23.1505Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M82.351 20.6305C82.1177 20.6305 81.9194 20.5372 81.756 20.3505L77.2585 14.5755C77.1302 14.4122 77.0777 14.2313 77.101 14.033C77.1244 13.823 77.2177 13.6538 77.381 13.5255C77.5444 13.3972 77.7252 13.3505 77.9235 13.3855C78.1335 13.4088 78.3027 13.5022 78.431 13.6655L82.351 18.6705L86.1835 13.753C86.3119 13.5897 86.4752 13.4963 86.6735 13.473C86.8835 13.4497 87.0702 13.5022 87.2335 13.6305C87.3969 13.7588 87.4902 13.928 87.5135 14.138C87.5369 14.3363 87.4844 14.5172 87.356 14.6805L82.946 20.3505C82.7944 20.5372 82.596 20.6305 82.351 20.6305ZM87.2685 26.2655C87.2219 26.2655 87.146 26.2597 87.041 26.248C86.9477 26.2363 86.8369 26.2072 86.7085 26.1605C86.5802 26.1022 86.4402 26.0263 86.2885 25.933C86.1485 25.828 86.0085 25.688 85.8685 25.513L82.351 20.9805L78.5185 25.9155C78.3902 26.0788 78.221 26.1722 78.011 26.1955C77.8127 26.2188 77.6319 26.1663 77.4685 26.038C77.3052 25.9097 77.2119 25.7463 77.1885 25.548C77.1652 25.338 77.2177 25.1513 77.346 24.988L81.756 19.318C81.896 19.1313 82.0885 19.038 82.3335 19.038C82.5902 19.038 82.7944 19.1313 82.946 19.318L87.041 24.568C87.0994 24.6497 87.1519 24.7022 87.1985 24.7255C87.2452 24.7488 87.2802 24.7663 87.3035 24.778C87.5019 24.778 87.6652 24.848 87.7935 24.988C87.9335 25.1163 88.0094 25.2797 88.021 25.478C88.0444 25.688 87.986 25.8688 87.846 26.0205C87.706 26.1722 87.531 26.2538 87.321 26.2655H87.2685Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M91.7343 26.2655C91.5126 26.2655 91.326 26.1897 91.1743 26.038C91.0226 25.8863 90.9468 25.6997 90.9468 25.478V14.103C90.9468 13.893 91.0226 13.7122 91.1743 13.5605C91.326 13.4088 91.5126 13.333 91.7343 13.333C91.9443 13.333 92.1251 13.4088 92.2768 13.5605C92.4285 13.7122 92.5043 13.893 92.5043 14.103V25.478C92.5043 25.6997 92.4285 25.8863 92.2768 26.038C92.1251 26.1897 91.9443 26.2655 91.7343 26.2655Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M104.938 26.2305C104.681 26.2305 104.483 26.1313 104.343 25.933L97.0452 16.343V25.478C97.0452 25.688 96.9693 25.8688 96.8177 26.0205C96.6777 26.1605 96.5027 26.2305 96.2927 26.2305C96.0943 26.2305 95.9193 26.1605 95.7677 26.0205C95.616 25.8688 95.5402 25.688 95.5402 25.478V14.1205C95.5402 13.9572 95.5868 13.8113 95.6802 13.683C95.7735 13.5547 95.9018 13.4672 96.0652 13.4205C96.2168 13.3622 96.3685 13.3563 96.5202 13.403C96.6718 13.4497 96.8002 13.5372 96.9052 13.6655L104.185 23.273V14.1205C104.185 13.9222 104.255 13.7472 104.395 13.5955C104.547 13.4438 104.728 13.368 104.938 13.368C105.148 13.368 105.323 13.4438 105.463 13.5955C105.614 13.7472 105.69 13.9222 105.69 14.1205V25.478C105.69 25.6413 105.643 25.7872 105.55 25.9155C105.457 26.0438 105.334 26.1372 105.183 26.1955C105.066 26.2188 104.984 26.2305 104.938 26.2305Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M20.0003 27.0587C19.3533 27.0587 18.8239 26.5292 18.8239 25.8822C18.8239 21.3528 15.118 17.6469 10.5886 17.6469C9.94152 17.6469 9.41211 17.1175 9.41211 16.4704C9.41211 15.8234 9.94152 15.2939 10.5886 15.2939C16.4415 15.2939 21.1768 20.0292 21.1768 25.8822C21.1768 26.5292 20.6474 27.0587 20.0003 27.0587Z\" fill=\"url(#paint0_linear)\"\u002F\u003E\n\u003Cpath d=\"M30.5884 16.4704C30.5884 17.1175 30.0589 17.6469 29.4119 17.6469C26.6178 17.6469 24.1178 19.0587 22.6472 21.2057C22.3236 20.3822 21.9413 19.6175 21.4707 18.9116C23.4119 16.6763 26.2648 15.2939 29.4119 15.2939C30.0589 15.2939 30.5884 15.8234 30.5884 16.4704Z\" fill=\"url(#paint1_linear)\"\u002F\u003E\n\u003Cpath d=\"M20 40C8.97059 40 0 31.0294 0 20C0 8.97059 8.97059 0 20 0C31.0294 0 40 8.97059 40 20C40 31.0294 31.0294 40 20 40ZM20 2.35294C10.2647 2.35294 2.35294 10.2647 2.35294 20C2.35294 29.7353 10.2647 37.6471 20 37.6471C29.7353 37.6471 37.6471 29.7353 37.6471 20C37.6471 10.2647 29.7353 2.35294 20 2.35294Z\" fill=\"url(#paint2_linear)\"\u002F\u003E\n\u003Cdefs\u003E\n\u003ClinearGradient id=\"paint0_linear\" x1=\"15.2945\" y1=\"15.2939\" x2=\"15.2945\" y2=\"27.0587\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#BC9CFF\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#8BA4F9\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003ClinearGradient id=\"paint1_linear\" x1=\"26.0295\" y1=\"15.2939\" x2=\"26.0295\" y2=\"21.2057\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#6FCF97\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#66D2EA\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003ClinearGradient id=\"paint2_linear\" x1=\"20\" y1=\"0\" x2=\"20\" y2=\"40\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#BC9CFF\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#8BA4F9\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003C\u002Fdefs\u003E\n\u003C\u002Fsvg\u003E\n\u003C\u002Fa\u003E\n            \u003Cp class=\"footer__logo-text\"\u003EБронирование номеров в лучшем отеле 2019 года по версии ассоциации «Отельные взгляды»\u003C\u002Fp\u003E\n          \u003C\u002Fdiv\u003E\n          \u003Cul class=\"footer__list\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EНавигация\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EО нас\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EНовости\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСлужба поддержки\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EУслуги\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003C\u002Ful\u003E\n          \u003Cul class=\"footer__list\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EО нас\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EО сервисе\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EНаша команда\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EВакансии\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EИнвесторы\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003C\u002Ful\u003E\n          \u003Cul class=\"footer__list\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EСлужба поддержки\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСоглашения\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСообщества\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСвязь с нами\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003C\u002Ful\u003E\n          \u003Cul class=\"footer__list footer__list-subscribe\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EПодписка\u003C\u002Fli\u003E\u003C\u002Fa\u003E\n            \u003Cli class=\"footer__item\"\u003EПолучайте специальные предложения и новости сервиса\u003C\u002Fli\u003E\n            \u003Cdiv class=\"footer__list-subscribe-item\"\u003E";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pug_html = pug_html + "\n          \u003C\u002Fsection\u003E\n          \u003Cdiv class=\"main-second__pagination\"\u003E" + (null == (pug_interp = __webpack_require__(/*! ../../blocks/form-elements/pagination/pagination.pug */ "./blocks/form-elements/pagination/pagination.pug").call(this, locals)) ? "" : pug_interp) + "\n          \u003C\u002Fdiv\u003E\n        \u003C\u002Fdiv\u003E\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fmain\u003E\n    \u003Cfooter class=\"footer\"\u003E\n      \u003Cdiv class=\"container\"\u003E\n        \u003Cdiv class=\"footer__wrapper\"\u003E\n          \u003Cdiv class=\"footer__logo\"\u003E\u003Ca href=\"index\"\u003E\u003Csvg width=\"106\" height=\"40\" viewBox=\"0 0 106 40\" fill=\"none\" xmlns=\"http:\u002F\u002Fwww.w3.org\u002F2000\u002Fsvg\"\u003E\n\u003Cpath d=\"M62.335 13.368C62.5567 13.368 62.7375 13.4438 62.8775 13.5955C63.0292 13.7355 63.105 13.9163 63.105 14.138C63.105 14.348 63.0292 14.5288 62.8775 14.6805C62.7375 14.8322 62.5567 14.908 62.335 14.908H58.5725V25.408C58.5725 25.6297 58.4967 25.8163 58.345 25.968C58.205 26.108 58.0242 26.178 57.8025 26.178C57.5925 26.178 57.4117 26.108 57.26 25.968C57.1083 25.8163 57.0325 25.6297 57.0325 25.408V14.908H53.27C53.06 14.908 52.8792 14.8322 52.7275 14.6805C52.5758 14.5288 52.5 14.348 52.5 14.138C52.5 13.9163 52.5758 13.7355 52.7275 13.5955C52.8792 13.4438 53.06 13.368 53.27 13.368H62.335Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M68.9076 13.368C69.7943 13.368 70.6285 13.5372 71.4101 13.8755C72.2034 14.2138 72.8918 14.6747 73.4751 15.258C74.0701 15.8413 74.5368 16.5297 74.8751 17.323C75.2134 18.1047 75.3826 18.9388 75.3826 19.8255C75.3826 20.8638 75.1609 21.8205 74.7176 22.6955C74.2743 23.5705 73.6735 24.3055 72.9151 24.9005C72.9151 24.9005 72.9035 24.9122 72.8801 24.9355C72.3201 25.3555 71.7076 25.688 71.0426 25.933C70.3776 26.1663 69.6659 26.283 68.9076 26.283C68.0209 26.283 67.1868 26.1138 66.4051 25.7755C65.6234 25.4372 64.9351 24.9763 64.3401 24.393C63.7568 23.8097 63.2959 23.1272 62.9576 22.3455C62.6193 21.5638 62.4501 20.7238 62.4501 19.8255C62.4501 18.8455 62.6484 17.9413 63.0451 17.113C63.4418 16.273 63.9843 15.5555 64.6726 14.9605L64.7426 14.8905C64.7543 14.8905 64.7718 14.8788 64.7951 14.8555C65.3551 14.3888 65.9851 14.0272 66.6851 13.7705C67.3851 13.5022 68.1259 13.368 68.9076 13.368ZM68.9076 24.743C69.3509 24.743 69.771 24.6905 70.1676 24.5855C70.576 24.4688 70.9609 24.3113 71.3226 24.113L65.1801 16.6405C64.8068 17.0722 64.5151 17.5622 64.3051 18.1105C64.0951 18.6472 63.9901 19.2188 63.9901 19.8255C63.9901 20.5022 64.1185 21.138 64.3751 21.733C64.6318 22.328 64.9818 22.853 65.4251 23.308C65.8801 23.7513 66.4051 24.1013 67.0001 24.358C67.5951 24.6147 68.2309 24.743 68.9076 24.743ZM72.5301 23.1505C72.9384 22.7072 73.2535 22.2055 73.4751 21.6455C73.7085 21.0738 73.8251 20.4672 73.8251 19.8255C73.8251 19.1488 73.6968 18.513 73.4401 17.918C73.1834 17.323 72.8276 16.8038 72.3726 16.3605C71.9293 15.9055 71.4101 15.5497 70.8151 15.293C70.2201 15.0363 69.5843 14.908 68.9076 14.908C68.4409 14.908 67.9918 14.9722 67.5601 15.1005C67.1284 15.2172 66.7259 15.3922 66.3526 15.6255L72.5301 23.1505Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M82.351 20.6305C82.1177 20.6305 81.9194 20.5372 81.756 20.3505L77.2585 14.5755C77.1302 14.4122 77.0777 14.2313 77.101 14.033C77.1244 13.823 77.2177 13.6538 77.381 13.5255C77.5444 13.3972 77.7252 13.3505 77.9235 13.3855C78.1335 13.4088 78.3027 13.5022 78.431 13.6655L82.351 18.6705L86.1835 13.753C86.3119 13.5897 86.4752 13.4963 86.6735 13.473C86.8835 13.4497 87.0702 13.5022 87.2335 13.6305C87.3969 13.7588 87.4902 13.928 87.5135 14.138C87.5369 14.3363 87.4844 14.5172 87.356 14.6805L82.946 20.3505C82.7944 20.5372 82.596 20.6305 82.351 20.6305ZM87.2685 26.2655C87.2219 26.2655 87.146 26.2597 87.041 26.248C86.9477 26.2363 86.8369 26.2072 86.7085 26.1605C86.5802 26.1022 86.4402 26.0263 86.2885 25.933C86.1485 25.828 86.0085 25.688 85.8685 25.513L82.351 20.9805L78.5185 25.9155C78.3902 26.0788 78.221 26.1722 78.011 26.1955C77.8127 26.2188 77.6319 26.1663 77.4685 26.038C77.3052 25.9097 77.2119 25.7463 77.1885 25.548C77.1652 25.338 77.2177 25.1513 77.346 24.988L81.756 19.318C81.896 19.1313 82.0885 19.038 82.3335 19.038C82.5902 19.038 82.7944 19.1313 82.946 19.318L87.041 24.568C87.0994 24.6497 87.1519 24.7022 87.1985 24.7255C87.2452 24.7488 87.2802 24.7663 87.3035 24.778C87.5019 24.778 87.6652 24.848 87.7935 24.988C87.9335 25.1163 88.0094 25.2797 88.021 25.478C88.0444 25.688 87.986 25.8688 87.846 26.0205C87.706 26.1722 87.531 26.2538 87.321 26.2655H87.2685Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M91.7343 26.2655C91.5126 26.2655 91.326 26.1897 91.1743 26.038C91.0226 25.8863 90.9468 25.6997 90.9468 25.478V14.103C90.9468 13.893 91.0226 13.7122 91.1743 13.5605C91.326 13.4088 91.5126 13.333 91.7343 13.333C91.9443 13.333 92.1251 13.4088 92.2768 13.5605C92.4285 13.7122 92.5043 13.893 92.5043 14.103V25.478C92.5043 25.6997 92.4285 25.8863 92.2768 26.038C92.1251 26.1897 91.9443 26.2655 91.7343 26.2655Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M104.938 26.2305C104.681 26.2305 104.483 26.1313 104.343 25.933L97.0452 16.343V25.478C97.0452 25.688 96.9693 25.8688 96.8177 26.0205C96.6777 26.1605 96.5027 26.2305 96.2927 26.2305C96.0943 26.2305 95.9193 26.1605 95.7677 26.0205C95.616 25.8688 95.5402 25.688 95.5402 25.478V14.1205C95.5402 13.9572 95.5868 13.8113 95.6802 13.683C95.7735 13.5547 95.9018 13.4672 96.0652 13.4205C96.2168 13.3622 96.3685 13.3563 96.5202 13.403C96.6718 13.4497 96.8002 13.5372 96.9052 13.6655L104.185 23.273V14.1205C104.185 13.9222 104.255 13.7472 104.395 13.5955C104.547 13.4438 104.728 13.368 104.938 13.368C105.148 13.368 105.323 13.4438 105.463 13.5955C105.614 13.7472 105.69 13.9222 105.69 14.1205V25.478C105.69 25.6413 105.643 25.7872 105.55 25.9155C105.457 26.0438 105.334 26.1372 105.183 26.1955C105.066 26.2188 104.984 26.2305 104.938 26.2305Z\" fill=\"#1F2041\"\u002F\u003E\n\u003Cpath d=\"M20.0003 27.0587C19.3533 27.0587 18.8239 26.5292 18.8239 25.8822C18.8239 21.3528 15.118 17.6469 10.5886 17.6469C9.94152 17.6469 9.41211 17.1175 9.41211 16.4704C9.41211 15.8234 9.94152 15.2939 10.5886 15.2939C16.4415 15.2939 21.1768 20.0292 21.1768 25.8822C21.1768 26.5292 20.6474 27.0587 20.0003 27.0587Z\" fill=\"url(#paint0_linear)\"\u002F\u003E\n\u003Cpath d=\"M30.5884 16.4704C30.5884 17.1175 30.0589 17.6469 29.4119 17.6469C26.6178 17.6469 24.1178 19.0587 22.6472 21.2057C22.3236 20.3822 21.9413 19.6175 21.4707 18.9116C23.4119 16.6763 26.2648 15.2939 29.4119 15.2939C30.0589 15.2939 30.5884 15.8234 30.5884 16.4704Z\" fill=\"url(#paint1_linear)\"\u002F\u003E\n\u003Cpath d=\"M20 40C8.97059 40 0 31.0294 0 20C0 8.97059 8.97059 0 20 0C31.0294 0 40 8.97059 40 20C40 31.0294 31.0294 40 20 40ZM20 2.35294C10.2647 2.35294 2.35294 10.2647 2.35294 20C2.35294 29.7353 10.2647 37.6471 20 37.6471C29.7353 37.6471 37.6471 29.7353 37.6471 20C37.6471 10.2647 29.7353 2.35294 20 2.35294Z\" fill=\"url(#paint2_linear)\"\u002F\u003E\n\u003Cdefs\u003E\n\u003ClinearGradient id=\"paint0_linear\" x1=\"15.2945\" y1=\"15.2939\" x2=\"15.2945\" y2=\"27.0587\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#BC9CFF\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#8BA4F9\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003ClinearGradient id=\"paint1_linear\" x1=\"26.0295\" y1=\"15.2939\" x2=\"26.0295\" y2=\"21.2057\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#6FCF97\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#66D2EA\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003ClinearGradient id=\"paint2_linear\" x1=\"20\" y1=\"0\" x2=\"20\" y2=\"40\" gradientUnits=\"userSpaceOnUse\"\u003E\n\u003Cstop stop-color=\"#BC9CFF\"\u002F\u003E\n\u003Cstop offset=\"1\" stop-color=\"#8BA4F9\"\u002F\u003E\n\u003C\u002FlinearGradient\u003E\n\u003C\u002Fdefs\u003E\n\u003C\u002Fsvg\u003E\n\u003C\u002Fa\u003E\n            \u003Cp class=\"footer__logo-text\"\u003EБронирование номеров в лучшем отеле 2019 года по версии ассоциации «Отельные взгляды»\u003C\u002Fp\u003E\n          \u003C\u002Fdiv\u003E\n          \u003Cul class=\"footer__list\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EНавигация\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EО нас\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EНовости\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСлужба поддержки\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EУслуги\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003C\u002Ful\u003E\n          \u003Cul class=\"footer__list\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EО нас\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EО сервисе\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EНаша команда\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EВакансии\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EИнвесторы\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003C\u002Ful\u003E\n          \u003Cul class=\"footer__list\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EСлужба поддержки\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСоглашения\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСообщества\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item\"\u003EСвязь с нами\u003C\u002Fli\u003E\u003C\u002Fa\u003E\u003C\u002Ful\u003E\n          \u003Cul class=\"footer__list footer__list-subscribe\"\u003E\u003Ca href=\"#\"\u003E\n              \u003Cli class=\"footer__item footer__item_active\"\u003EПодписка\u003C\u002Fli\u003E\u003C\u002Fa\u003E\n            \u003Cli class=\"footer__item\"\u003EПолучайте специальные предложения и новости сервиса\u003C\u002Fli\u003E\n            \u003Cdiv class=\"footer__list-subscribe-item\"\u003E";
 pug_mixins["TextSubscribe"] = pug_interp = function(){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\n              ";
@@ -1325,138 +1306,6 @@ pug_html = pug_html + "\n            \u003C\u002Fdiv\u003E\n          \u003C\u00
         typeof pug_indent !== 'undefined' ? pug_indent : undefined));
     ;;return pug_html;};
 module.exports = template;
-
-/***/ }),
-
-/***/ "./blocks/room/image/room1.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room1.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room1.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room10.jpg":
-/*!**************************************!*\
-  !*** ./blocks/room/image/room10.jpg ***!
-  \**************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room10.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room11.jpg":
-/*!**************************************!*\
-  !*** ./blocks/room/image/room11.jpg ***!
-  \**************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room11.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room12.jpg":
-/*!**************************************!*\
-  !*** ./blocks/room/image/room12.jpg ***!
-  \**************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room12.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room2.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room2.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room2.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room3.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room3.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room3.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room4.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room4.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room4.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room5.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room5.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room5.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room6.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room6.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room6.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room7.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room7.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room7.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room8.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room8.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room8.jpg";
-
-/***/ }),
-
-/***/ "./blocks/room/image/room9.jpg":
-/*!*************************************!*\
-  !*** ./blocks/room/image/room9.jpg ***!
-  \*************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "images/room9.jpg";
 
 /***/ })
 
@@ -1572,26 +1421,6 @@ module.exports = __webpack_require__.p + "images/room9.jpg";
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	(() => {
-/******/ 		var scriptUrl;
-/******/ 		if (__webpack_require__.g.importScripts) scriptUrl = __webpack_require__.g.location + "";
-/******/ 		var document = __webpack_require__.g.document;
-/******/ 		if (!scriptUrl && document) {
-/******/ 			if (document.currentScript)
-/******/ 				scriptUrl = document.currentScript.src
-/******/ 			if (!scriptUrl) {
-/******/ 				var scripts = document.getElementsByTagName("script");
-/******/ 				if(scripts.length) scriptUrl = scripts[scripts.length - 1].src
-/******/ 			}
-/******/ 		}
-/******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
-/******/ 		// or pass an empty string ("") and set the __webpack_public_path__ variable from your code to use your own logic.
-/******/ 		if (!scriptUrl) throw new Error("Automatic publicPath is not supported in this browser");
-/******/ 		scriptUrl = scriptUrl.replace(/#.*$/, "").replace(/\?.*$/, "").replace(/\/[^\/]+$/, "/");
-/******/ 		__webpack_require__.p = scriptUrl + "../";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */

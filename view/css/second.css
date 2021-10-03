@@ -1909,6 +1909,11 @@ body {
           justify-content: space-between;
 }
 
+.pagination__items {
+  max-height: 40px;
+  overflow: hidden;
+}
+
 .pagination__item {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
